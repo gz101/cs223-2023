@@ -1,0 +1,176 @@
+\documentclass[11pt]{article}
+
+%%% Packages
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[shortlabels]{enumitem}
+\usepackage[dvipsnames]{xcolor} % used for notes and solutions
+\usepackage{hyperref} % used for links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+\pagestyle{myheadings}
+\markright{CS 223 \hfill Homework 1}
+\pagenumbering{gobble}
+
+\usepackage{geometry}
+\geometry{
+    left=1in,
+    right=1in,
+    top=1in,
+    bottom=1in
+}
+
+%%% Formatting
+
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0in}
+
+%%% Useful Commands
+
+\newcommand\bit{\{0, 1\}}
+
+\newcommand\false{\textbf{FALSE}}
+\newcommand\true{\textbf{TRUE}}
+
+\newcommand\size[1]{\left|#1\right|} % cardinality
+\newcommand\union{\cup}
+\newcommand\intersect{\cap}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\np}{\mathop{\rm NP}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\vol}{\mathop{\rm Vol}}
+\newcommand{\conp}{\mathop{\rm co-NP}}
+\newcommand{\atisp}{\mathop{\rm ATISP}}
+\renewcommand{\vec}[1]{{\mathbf #1}}
+\newcommand{\cupdot}{\mathbin{\mathaccent\cdot\cup}}
+\newcommand{\mmod}[1]{\ (\mathrm{mod}\ #1)} 
+
+%%% Notes
+
+\newenvironment{hint}{\itshape\color{gray}\textbf{Hint:}}{}
+\newcommand\todo[1]{\textbf{\color{red}[[TODO: \textit{#1}]]}}
+\newcommand\idk{\textbf{\color{orange}I don't know }}
+\newcommand\bonus[1]{BONUS #1}
+
+%%% Questions
+
+%% TODO: Fix \hfill error
+\newcommand\thequestion{\thesection}
+\newenvironment{question}[2]
+{\newpage\section{#1\texorpdfstring{\hfill}{horizontal spacing}{\rm\normalsize #2}}}{}
+
+\newcommand\thesubquestion{\thesubsection}
+\newenvironment{subquestion}[2]
+{\subsection{#1\texorpdfstring{\hfill}{horizontal spacing}{\rm\normalsize #2}}}{}
+
+\newenvironment{solution}
+{\textbf{Solution: }\color{blue}}
+{\color{black}}
+
+%%% Assignment
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Book 1.22}{[coin set]}
+
+\begin{enumerate}[(a)]
+    \item Consider the set \(\{1, \ldots, n\}\). We generate a subset \(X\) of this set as follows: a fair coin is flipped independently for each element of the set; if the coin lands heads then the element is added to \(X\), and otherwise it is not. Argue that the resulting set \(X\) is equally likely to be any one of the \(2^n\) possible subsets.
+    
+    \item Suppose that two sets \(X\) and \(Y\) are chosen independently and uniformly at random from all the \(2^n\) subsets of \(\{1, \ldots, n\}\). Determine \(\Pr(X\subseteq Y)\) and \(\Pr(X \cup Y = \{1,\ldots,n\})\). (\emph{Hint:} Use part (a) of this problem.)
+\end{enumerate}
+
+\begin{solution}
+
+\begin{enumerate}[(a)]
+    \item To argue that the resulting set \(X\) is equally likely to be any one of the \(2^n\) possible subsets, we analyze the process of generating \(X\).
+
+    Let \(S=\{1,\ldots,n\}\) be our initial set. The process of generating \(X\) involves flipping a fair coin independently for each element in \(S\). The probability of a coin landing heads (and thus including the corresponding element in \(X\)) is \(1/2\). Similarly, an element is excluded from \(X\) with probability \(1/2\).
+
+    Consider the arbitrary subset \(Y \subseteq S\). The probability that \(Y\) is generated can be computed by considering each element of \(S\). For each element in \(Y\), the coin must land heads, and for each element in \(S \setminus Y\), the coin must land tails. Since there are \(\size{Y}\) elements in \(Y\) and \(n-\size{Y}\) elements in \(S \setminus Y\), and each coin flip is independent, the probability of obtaining set \(Y\) is given by \(\Pr(Y) = (1/2)^{\size{Y}} \cdot (1/2)^{n-\size{Y}} = (1/2)^n\).
+
+    Given that we have constructed \(Y\) arbitrarily, and there are \(2^n\) such subsets, it follows that each subset \(X\) of \(S\) is equally likely to be generated with probability \((1/2)^n\). This concludes our proof.
+
+    \item \(\Pr(X \subseteq Y)\): For an element \(i \in \{1,\ldots,n\}\), there are four possible cases in relation to its presence in \(X\) and \(Y\): (i) \(i\) is in neither \(X\) nor \(Y\), (ii) \(i\) is in both \(X\) and \(Y\), (iii) \(i\) is in \(Y\) but not \(X\), and (iv) \(i\) is in \(X\) but not in \(Y\). Of these cases, only the last one violates our desired condition of \(X \subseteq Y\). Since each element is included or excluded independently, we calculate the probability for each element and then take the product for all \(n\) elements.
+
+    For each element, the probability of not violating the condition \(X \subseteq Y\) is the sum of the probabilities of the three allowed cases. The probability of each element being in a specific set is \(1/2\), and hence the probability for each of the allowed three cases is \((1/2)^2=1/4\). Therefore, for each element, the probability of maintaining \(X \subseteq Y\) is \(3 \times (1/4)=3/4\), and summing over the \(n\) elements gives the overall probability \(\Pr(X \subseteq Y)=(3/4)^n\).
+
+    \(\Pr(X \cup Y = \{1,\ldots,n\})\): The same four cases apply to every element \(i \in \{1,\ldots,n\}\), but for this condition the only disallowed case is when \(i\) is in neither \(X\) nor \(Y\). Since the probability that this case occurs is \(1/4\) as calculated previously, for each element, the probability of maintaining \(X \cup Y = \{1,\ldots,n\}\) is \(1-1/4=3/4\). Summing over the \(n\) elements gives the same overall probability \(\Pr(X \cup Y = \{1,\ldots,n\})=(3/4)^n\).
+\end{enumerate}
+
+\end{solution}
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Book 3.15}{[variance]}
+
+
+\begin{solution}
+
+
+\end{solution}
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Book 3.19}{[standard deviation]}
+
+
+\begin{solution}
+
+
+\end{solution}
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Book 4.12}{[bounds on coin flips]}
+
+
+\begin{solution}
+
+\end{solution}
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Book 4.13}{[Poisson distribution]}
+
+
+\begin{solution}
+
+\end{solution}
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Question 6
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{question}{Additional Problem}{[algorithms with predictions framework]}
+
+\begin{solution}
+
+\end{solution}
+\end{question}
+
+\end{document}
