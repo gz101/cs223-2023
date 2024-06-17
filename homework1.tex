@@ -94,15 +94,13 @@
 \begin{solution}
 
 \begin{enumerate}[(a)]
-    \item To argue that the resulting set \(X\) is equally likely to be any one of the \(2^n\) possible subsets, we analyze the process of generating \(X\).
+    \item Let \(S=\{1,\ldots,n\}\) be our initial set of integers. The process of generating \(X\) involves flipping a fair coin independently for each element in \(S\). The probability of a coin landing heads (and thus including the corresponding element in \(X\)) is \(1/2\). Similarly, an element is excluded from \(X\) with probability \(1/2\).
 
-    Let \(S=\{1,\ldots,n\}\) be our initial set. The process of generating \(X\) involves flipping a fair coin independently for each element in \(S\). The probability of a coin landing heads (and thus including the corresponding element in \(X\)) is \(1/2\). Similarly, an element is excluded from \(X\) with probability \(1/2\).
+    Without loss of generality, consider some subset \(Y \subseteq S\). The probability that \(Y\) is generated can be computed by considering each element of \(S\). For each element in \(Y\), the coin must land heads, and for each element in \(S \setminus Y\), the coin must land tails. Since there are \(\size{Y}\) elements in \(Y\) and \(n-\size{Y}\) elements in \(S \setminus Y\), and each coin flip is independent, the probability of obtaining set \(Y\) is given by \(\Pr[Y] = (1/2)^{\size{Y}} \cdot (1/2)^{n-\size{Y}} = (1/2)^n\).
 
-    Consider the arbitrary subset \(Y \subseteq S\). The probability that \(Y\) is generated can be computed by considering each element of \(S\). For each element in \(Y\), the coin must land heads, and for each element in \(S \setminus Y\), the coin must land tails. Since there are \(\size{Y}\) elements in \(Y\) and \(n-\size{Y}\) elements in \(S \setminus Y\), and each coin flip is independent, the probability of obtaining set \(Y\) is given by \(\Pr(Y) = (1/2)^{\size{Y}} \cdot (1/2)^{n-\size{Y}} = (1/2)^n\).
+    Given that we have constructed \(Y\) arbitrarily, and there are \(2^n\) such subsets, it follows that each generated subset \(X\) of \(S\) is equally likely to be generated with probability \((1/2)^n\). This concludes our proof.
 
-    Given that we have constructed \(Y\) arbitrarily, and there are \(2^n\) such subsets, it follows that each subset \(X\) of \(S\) is equally likely to be generated with probability \((1/2)^n\). This concludes our proof.
-
-    \item \(\Pr(X \subseteq Y)\): For an element \(i \in \{1,\ldots,n\}\), there are four possible cases in relation to its presence in \(X\) and \(Y\): (i) \(i\) is in neither \(X\) nor \(Y\), (ii) \(i\) is in both \(X\) and \(Y\), (iii) \(i\) is in \(Y\) but not \(X\), and (iv) \(i\) is in \(X\) but not in \(Y\). Of these cases, only the last one violates our desired condition of \(X \subseteq Y\). Since each element is included or excluded independently, we calculate the probability for each element and then take the product for all \(n\) elements.
+    \item \(\Pr(X \subseteq Y)\): For an element \(i \in \{1,\ldots,n\}\), there are four possible cases in relation to its presence in \(X\) and \(Y\): (i) \(i\) is in neither \(X\) nor \(Y\), (ii) \(i\) is in both \(X\) and \(Y\), (iii) \(i\) is in \(Y\) but not \(X\), and (iv) \(i\) is in \(X\) but not in \(Y\). Of these cases, only the last one violates our desired condition of \(X \subseteq Y\). Since each element is included or excluded independently when generating \(X\) and \(Y\), we calculate the probability for each element and then take the product for all \(n\) elements.
 
     For each element, the probability of not violating the condition \(X \subseteq Y\) is the sum of the probabilities of the three allowed cases. The probability of each element being in a specific set is \(1/2\), and hence the probability for each of the allowed three cases is \((1/2)^2=1/4\). Therefore, for each element, the probability of maintaining \(X \subseteq Y\) is \(3 \times (1/4)=3/4\), and summing over the \(n\) elements gives the overall probability \(\Pr(X \subseteq Y)=(3/4)^n\).
 
@@ -167,6 +165,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{question}{Additional Problem}{[algorithms with predictions framework]}
+
+Let us suppose that we have \(N\) jobs to run on our system. Of these jobs, \(n\) are short jobs, that each take time \(s\), and \(m\) are long jobs, that each take time \(\ell > s\). Here \(N=n+m\). Jobs run one at a time, and a scheduler schedules the jobs in some order. A job's waiting it waits before being served. So, for example, a short job that is scheduled after two long jobs has waiting time \(2 \ell\).
+
+\begin{itemize}
+    \item If we know nothing about the jobs, it makes some sense to just schedule the jobs randomly (according to some random permutation). What is the expected waiting time of a job in this case, as a function of \(n,m,s,\ell\). (You may want to find the expected waiting times for small and large jobs separately, and then combine them.)
+    \item If we know which jobs are small and which jobs are long, then we should schedule short jobs before long jobs. (You don't have to prove this, but you may think about how you would prove it.) In this case, there is no randomness, so you can deterministically calculate the average waiting time over all jobs. Do this computation.
+    \item Of course, even if we schedule all short jobs before all long jobs, we could calculate the average waiting time with probabilistic analysis as follows. Assume the short jobs are in a random order, and similarly the long jobs are in random order. Find the expected waiting times for small and large jobs separately, and then combine them to determine the average waiting time. (Does your answer match the previous step?)
+    \item We might now know which jobs are small and which jobs are long precisely. Suppose the scheduler can predict whether a job is short or long, but it makes some mistakes. In particular, a short job is classified as a long job with some probability \(p\), \(0<p<1\) (independently for each job), and similarly a long job is classified as a short job with some probability \(q\), \(0<q<1\). The scheduler then orders the jobs that are classified as short in a random order, and the jobs that are classified as long in a random order. What is the expected waiting time of a job in this case, as a function of \(n,m,s,\ell,p,q\). (There are many ways to calculate this; you might want to use variables \(X_{i,j}=1\) if the job \(i\) is scheduled after job \(j\), where the jobs are initially names job 1, job 2, etc.)
+    \item (Open-ended) Suppose that \(n=m\), that is there are as many short jobs as long jobs. Under what conditions does the predictor perform better than just randomly ordering all the jobs? Can you explain this condition?
+\end{itemize}
 
 \begin{solution}
 
